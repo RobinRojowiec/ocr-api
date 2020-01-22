@@ -113,7 +113,7 @@ def hocr_to_simple_json(hocr_dict: dict, lang: str):
 
 
 @app.post("/api/extract", response_model=ExtractedPage, description="Extract text with positions from image")
-def extract_text(file: UploadFile = File(...), lang: str = "eng", text_only: bool = False):
+def extract_text(file: UploadFile = File(...), lang: str = "eng", text_only: bool = False, custom_config: str = None):
     """
     :param file:
     :param lang: available: deu, eng
@@ -124,11 +124,15 @@ def extract_text(file: UploadFile = File(...), lang: str = "eng", text_only: boo
         with open(filepath, "wb") as temp_file:
             temp_file.write(file.file.read())
 
+    # preprocess_image(filepath)
+    if custom_config is None:
+        custom_config = '--oem 3'
+
     if text_only:
-        output = pytesseract.image_to_string(filepath, lang=lang)
+        output = bytes(pytesseract.image_to_string(filepath, lang=lang, config=custom_config), encoding="utf-8")
         response = PlainTextResponse(content=output)
     else:
-        output = pytesseract.image_to_pdf_or_hocr(filepath, lang=lang, extension='hocr')
+        output = pytesseract.image_to_pdf_or_hocr(filepath, lang=lang, extension='hocr', config=custom_config)
         extracted = xmltodict.parse(output)
         response = hocr_to_simple_json(extracted, lang)
 
