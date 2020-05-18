@@ -4,11 +4,6 @@ services:
   - docker
 
 before_install:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
   - docker build -t berndserker/ocr-api .
-  
-deploy:
-  provider: script
-  script:
-   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin && docker push berndserker/ocr-api
-  on:
-    branch: master
+  - docker push berndserker/ocr-api
