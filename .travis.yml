@@ -1,9 +1,14 @@
-language: python
-
+dist: trusty
 services:
   - docker
 
-before_install:
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
-  - docker build -t berndserker/ocr-api .
-  - docker push berndserker/ocr-api
+jobs:
+  include:
+    - stage: build docker image
+      script:
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
+        - docker build -t berndserker/ocr-api .
+        - docker images
+        - docker push berndserker/ocr-api
+    - stage: test
+      script: docker run --rm $DOCKER_USER/ocr-api
