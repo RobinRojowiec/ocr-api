@@ -1,4 +1,3 @@
-dist: trusty
 services:
   - docker
 
@@ -8,6 +7,4 @@ jobs:
       script:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
         - docker build -t berndserker/ocr-api .
-        - docker images
-        - docker tag ocr-api $DOCKER_USER/ocr-api:latest
         - docker push berndserker/ocr-api
