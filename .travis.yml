@@ -9,5 +9,5 @@ jobs:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
         - docker build -t berndserker/ocr-api .
         - docker images
-        - docker tag dev $DOCKER_USER/ocr-api:latest
+        - docker tag ocr-api $DOCKER_USER/ocr-api:latest
         - docker push berndserker/ocr-api
