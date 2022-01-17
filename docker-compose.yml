@@ -1,0 +1,10 @@
+version: '2.1'
+
+services:
+  tesseract:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tesseract
+    ports:
+      - 8000:8000
